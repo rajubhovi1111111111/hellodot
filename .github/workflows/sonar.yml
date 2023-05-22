@@ -18,7 +18,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
-
+      - name: Find SonarQubeAnalysisConfig.xml
+        run: find . -name SonarQubeAnalysisConfig.xml
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
 
