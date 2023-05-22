@@ -19,12 +19,12 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.0.2
-
       - name: Install SonarScanner for MSBuild
         run: |
           dotnet tool install --global dotnet-sonarscanner --version 5.3.1
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.0.2
 
       - name: SonarQube Scan
         run: |
