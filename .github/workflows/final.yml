@@ -1,0 +1,43 @@
+name: Build and deploy ASP app to Azure Web App - dotnetsimple1
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup MSBuild path
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.5
+
+      - name: Restore NuGet packages
+        run: nuget restore
+
+      - name: Publish to folder
+        run: msbuild /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="\published\"
+
+      - name: SonarQube Scanner
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: |
+          mkdir .\.sonar
+          Invoke-WebRequest -Uri https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472.zip -OutFile .\.sonar\sonar-scanner.zip
+          Expand-Archive -Path .\.sonar\sonar-scanner.zip -DestinationPath .\.sonar
+          del .\.sonar\sonar-scanner.zip
+          .\.sonar\sonar-scanner-4.6.2.2472\bin\sonar-scanner.bat
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: ASP-app
+          path: '/published/**'
