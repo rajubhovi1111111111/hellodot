@@ -43,6 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         shell: pwsh
         run: |
-          .\.sonar\sonar-scanner-4.6.2.2472\bin\sonar-scanner.bat begin /k:"dotnet" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+          .\.sonar\sonar-scanner-4.6.2.2472\bin\sonar-scanner.bat begin /k:"dotnet" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+          dotnet restore
           dotnet build
-          .\.sonar\sonar-scanner-4.6.2.2472\bin\sonar-scanner.bat end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\sonar-scanner-4.6.2.2472\bin\sonar-scanner.bat end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
