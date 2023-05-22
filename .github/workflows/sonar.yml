@@ -21,25 +21,14 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
 
-      - name: Create SonarQube directories
-        run: |
-          mkdir -p .sonarqube/conf
-          echo "<SonarQubeAnalysisProperties />" > .sonarqube/conf/SonarQubeAnalysisConfig.xml
-
-      - name: Install .NET Core SDK
-        uses: actions/setup-dotnet@v1
+      - name: Set up Java
+        uses: actions/setup-java@v2
         with:
-          dotnet-version: '5.0.x' # Replace with the appropriate .NET Core SDK version
-
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build project
-        run: dotnet build --configuration Release
+          java-version: 11
 
       - name: SonarQube Scan
         run: |
           dotnet tool install --global dotnet-sonarscanner
-          dotnet sonarscanner begin /k:"your-project-key" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-          dotnet build --configuration Release
+          dotnet sonarscanner begin /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          msbuild /t:Rebuild
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
