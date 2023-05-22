@@ -30,12 +30,11 @@ jobs:
       - name: Install .NET Core SDK 3.1.405
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.405
+          dotnet-version: 4.8
 
       - name: SonarQube Scan
         run: |
           dotnet tool install --global dotnet-sonarscanner --version 5.3.1
-          echo '<?xml version="1.0" encoding="utf-8"?><SonarQubeAnalysisConfig><Rules /><Settings /></SonarQubeAnalysisConfig>' > .sonarqube/conf/SonarQubeAnalysisConfig.xml
           dotnet sonarscanner begin /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cache.enabled=true /d:sonar.cache.path="D:\a\sonarqube_cache"
           msbuild /t:Rebuild
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
