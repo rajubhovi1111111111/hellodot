@@ -27,17 +27,11 @@ jobs:
         with:
           dotnet-version: 3.1.405
 
-      - name: Create SonarQube Config Directory
-        run: |
-          mkdir -p .sonarqube/conf
-
-      - name: Create SonarQube Analysis Config
-        run: |
-          echo '<?xml version="1.0" encoding="utf-8"?><SonarQubeAnalysisConfig><Rules /><Settings /></SonarQubeAnalysisConfig>' > .sonarqube/conf/SonarQubeAnalysisConfig.xml
 
       - name: SonarQube Scan
         run: |
           dotnet tool install --global dotnet-sonarscanner --version 5.3.1
-          dotnet sonarscanner begin /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        shell: powershell
+          .\.sonar\scanner\dotnet-sonarscanner begin /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           msbuild /t:Rebuild
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscannerr end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
