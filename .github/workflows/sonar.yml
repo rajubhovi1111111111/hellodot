@@ -21,6 +21,11 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
 
+      - name: Create SonarQube directories
+        run: |
+          mkdir -p .sonarqube/conf
+          echo "<SonarQubeAnalysisProperties />" > .sonarqube/conf/SonarQubeAnalysisConfig.xml
+
       - name: SonarQube Scan
         run: |
           dotnet tool install --global dotnet-sonarscanner
