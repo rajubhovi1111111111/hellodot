@@ -1,48 +1,50 @@
-name: Build
+# SonarQube configuration for Java and .NET applications
+# Replace the placeholders with your actual values
 
+# Define the workflow
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
-    name: Build
-    runs-on: windows-latest
+  sonarqube:
+    name: SonarQube Analysis
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
+          java-version: '11'
 
-      - name: Cache SonarQube packages
-        uses: actions/cache@v1
+      - name: SonarQube Scan (Java)
+        uses: sonarsource/sonarqube-scan-action@v1
         with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+          projectBaseDir: ./java-app
 
-      - name: Cache SonarQube scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v1
+          # SonarQube token for authentication
+          sonarToken: ${{ secrets.SONAR_TOKEN }}
+
+          # SonarQube host URL
+          sonarHost: your-sonarqube-host-url
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: SonarQube Scan (.NET)
+        uses: sonarsource/sonarqube-scan-action@v1
         with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
+          projectBaseDir: ./dotnet-app
 
-      - name: Install SonarQube scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        run: |
-          mkdir .\.sonar
-          Invoke-WebRequest -Uri https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472.zip -OutFile .\.sonar\sonar-scanner.zip
-          Expand-Archive -Path .\.sonar\sonar-scanner.zip -DestinationPath .\.sonar
-          Remove-Item .\.sonar\sonar-scanner.zip
+          # SonarQube token for authentication
+          sonarToken: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Build and analyze with SonarQube
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: powershell
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"example" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
-          msbuild
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          # SonarQube host URL
+          sonarHost: ${{ secrets.SONAR_HOST_URL }}
