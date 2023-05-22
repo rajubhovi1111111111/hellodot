@@ -1,4 +1,4 @@
-# SonarQube configuration for .NET application (built with .NET Framework 4.8)   
+# SonarQube configuration for .NET application (built with .NET Framework 4.8)
 
 # Define the workflow
 on:
@@ -32,4 +32,4 @@ jobs:
           dotnet tool install --global dotnet-sonarscanner --version 5.3.1
           dotnet sonarscanner begin /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           msbuild /t:Rebuild
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.scanner.projectConfigPath="D:\a\hellodot\hellodot\.sonarqube\conf\SonarQubeAnalysisConfig.xml"
