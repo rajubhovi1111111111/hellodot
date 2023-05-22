@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="dbConnect-Web.config Connection String" description="dbConnect Connection String used in web.config by the application to access the database." defaultValue="Server=tcp:mydotnetserver.database.windows.net,1433;Initial Catalog=DotnetWEBDB;Persist Security Info=False;User ID=appuser;Password=Polo@@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\shouryasharma\\Desktop\\WebFormDemo\\WebFormDemo\\WebFormDemo\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='dbConnect']/@connectionString" />
+  </parameter>
+</parameters>
