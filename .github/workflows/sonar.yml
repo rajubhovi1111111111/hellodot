@@ -12,7 +12,7 @@ on:
 jobs:
   sonarqube:
     name: SonarQube Analysis
-    runs-on: windows-latest-net
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
 
       - name: Install SonarScanner for MSBuild
         run: |
-          dotnet tool install --global dotnet-sonarscanner --version 5.3.1
+          dotnet tool install --global dotnet-sonarscanner --version 6.0.5
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
