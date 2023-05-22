@@ -1,5 +1,4 @@
-# SonarQube configuration for Java and .NET applications
-# Replace the placeholders with your actual values
+# SonarQube configuration for .NET application (built with .NET Framework 4.8)
 
 # Define the workflow
 on:
@@ -13,38 +12,18 @@ on:
 jobs:
   sonarqube:
     name: SonarQube Analysis
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-
-      - name: SonarQube Scan (Java)
-        uses: sonarsource/sonarqube-scan-action@v1
-        with:
-          projectBaseDir: ./java-app
-
-          # SonarQube token for authentication
-          sonarToken: ${{ secrets.SONAR_TOKEN }}
-
-          # SonarQube host URL
-          sonarHost: ${{ secrets.SONAR_HOST_URL }}
-
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
 
-      - name: SonarQube Scan (.NET)
-        uses: sonarsource/sonarqube-scan-action@v1
-        with:
-          projectBaseDir: ./dotnet-app
-
-          # SonarQube token for authentication
-          sonarToken: ${{ secrets.SONAR_TOKEN }}
-
-          # SonarQube host URL
-          sonarHost: ${{ secrets.SONAR_HOST_URL }}
+      - name: SonarQube Scan
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet sonarscanner begin /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          msbuild /t:Rebuild
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
