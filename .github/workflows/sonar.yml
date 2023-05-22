@@ -54,11 +54,11 @@ jobs:
 
 
 
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        shell: powershell
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"dotnet" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
-          dotnet build
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+- name: Build and analyze
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  shell: powershell
+  run: |
+    .\.sonar\scanner\MSBuild.SonarQube.Runner.exe begin /k:"example" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+    msbuild /t:Rebuild
+    .\.sonar\scanner\MSBuild.SonarQube.Runner.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
