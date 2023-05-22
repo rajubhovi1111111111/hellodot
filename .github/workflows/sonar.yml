@@ -30,8 +30,8 @@ jobs:
 
       - name: SonarQube Scan
         run: |
-          dotnet tool install --global dotnet-sonarscanner --version 5.3.1
         shell: powershell
+          dotnet tool install --global dotnet-sonarscanner --version 5.3.1
           .\.sonar\scanner\dotnet-sonarscanner begin /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           msbuild /t:Rebuild
           .\.sonar\scanner\dotnet-sonarscannerr end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
