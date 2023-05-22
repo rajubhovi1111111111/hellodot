@@ -17,14 +17,14 @@ jobs:
 
       - name: Setup Nuget
         uses: Nuget/setup-nuget@v1.0.5
-
-      - name: Restore nuget packages
-        run: nuget restore MySolution.sln
-        
       - name: List files and directories
         run: |
           ls -la
           dir
+      - name: Restore nuget packages
+        run: nuget restore MySolution.sln
+        
+
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
       
