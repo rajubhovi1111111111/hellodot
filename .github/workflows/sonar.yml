@@ -15,21 +15,8 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
 
-      - name: Setup Nuget
-        uses: Nuget/setup-nuget@v1.0.5
-      - name: List files and directories
-        run: |
-          ls -la
-          dir
-      - name: Restore nuget packages
-        run: nuget restore MySolution.sln
-        
-
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.2
-      
       - name: Cache SonarQube packages
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
@@ -37,13 +24,11 @@ jobs:
 
       - name: Cache SonarQube scanner
         id: cache-sonar-scanner
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
-          
-
 
       - name: Install SonarQube scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
@@ -51,13 +36,27 @@ jobs:
           mkdir .\.sonar
           Invoke-WebRequest -Uri https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472.zip -OutFile .\.sonar\sonar-scanner.zip
           Expand-Archive -Path .\.sonar\sonar-scanner.zip -DestinationPath .\.sonar
-          del .\.sonar\sonar-scanner.zip
+          Remove-Item .\.sonar\sonar-scanner.zip
 
+      - name: Setup NuGet
+        uses: Nuget/setup-nuget@v1.0.5
+
+      - name: List files and directories
+        run: |
+          Get-ChildItem -Path .
+          Get-ChildItem -Path . -Recurse -File
+
+      - name: Restore NuGet packages
+        run: nuget restore 
+        
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
 
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        shell: powershell
+        shell: pwsh
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"example" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
           dotnet build
