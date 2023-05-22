@@ -1,4 +1,4 @@
-# SonarQube configuration for .NET application (built with .NET Framework 4.8) 
+# SonarQube configuration for .NET application (built with .NET Framework 4.8)  
 
 # Define the workflow 
 on:
