@@ -22,6 +22,11 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
 
+      - name: Install Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'  # Adjust the Java version as per your requirements
+
       - name: Install .NET Core SDK 3.1.405
         uses: actions/setup-dotnet@v1
         with:
@@ -30,6 +35,7 @@ jobs:
       - name: SonarQube Scan
         run: |
           dotnet tool install --global dotnet-sonarscanner --version 5.3.1
+          echo '<?xml version="1.0" encoding="utf-8"?><SonarQubeAnalysisConfig><Rules /><Settings /></SonarQubeAnalysisConfig>' > .sonarqube/conf/SonarQubeAnalysisConfig.xml
           dotnet sonarscanner begin /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cache.enabled=true /d:sonar.cache.path="D:\a\sonarqube_cache"
           msbuild /t:Rebuild
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
