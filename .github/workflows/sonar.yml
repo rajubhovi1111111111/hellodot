@@ -28,9 +28,11 @@ jobs:
           dotnet-version: 3.1.405
 
 
-      - name: SonarQube Scan
-        run: |
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         shell: powershell
-          .\.sonar\scanner\dotnet-sonarscanner begin /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-          msbuild /t:Rebuild
-          .\.sonar\scanner\dotnet-sonarscannerr end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"example" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+          dotnet build
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
