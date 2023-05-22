@@ -23,9 +23,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Cache SonarQube packages
-        uses: actions/cache@v1
-        
+
       - name: Checkout code
         uses: actions/checkout@v2
 
