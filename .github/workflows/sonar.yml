@@ -30,11 +30,7 @@ jobs:
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
           
-      - name: Setup Nuget
-        uses: Nuget/setup-nuget@v1.0.5
 
-      - name: Restore nuget packages
-        run: nuget restore MySolution.sln
 
       - name: Install SonarQube scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
@@ -43,7 +39,11 @@ jobs:
           Invoke-WebRequest -Uri https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472.zip -OutFile .\.sonar\sonar-scanner.zip
           Expand-Archive -Path .\.sonar\sonar-scanner.zip -DestinationPath .\.sonar
           del .\.sonar\sonar-scanner.zip
+      - name: Setup Nuget
+        uses: Nuget/setup-nuget@v1.0.5
 
+      - name: Restore nuget packages
+        run: nuget restore MySolution.sln
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
 
