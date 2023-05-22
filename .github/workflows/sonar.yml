@@ -33,7 +33,7 @@ jobs:
           sonarToken: ${{ secrets.SONAR_TOKEN }}
 
           # SonarQube host URL
-          sonarHost: your-sonarqube-host-url
+          sonarHost: ${{ secrets.SONAR_HOST_URL }}
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
