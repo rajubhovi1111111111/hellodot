@@ -30,7 +30,7 @@ jobs:
       - name: Install .NET Core SDK 3.1.405
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 4.8
+          dotnet-version: 5.0
 
       - name: SonarQube Scan
         run: |
