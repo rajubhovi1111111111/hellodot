@@ -27,14 +27,9 @@ jobs:
         with:
           dotnet-version: 3.1.405
 
-      - name: Install dotnet-sonarscanner
-        run: dotnet tool install --global dotnet-sonarscanner --version 5.3.1
-
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        shell: powershell
+      - name: SonarQube Scan
         run: |
-          dotnet-sonarscanner begin /k:"example" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
-          dotnet build
-          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet tool install --global dotnet-sonarscanner --version 5.3.1
+          dotnet sonarscanner begin /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cache.enabled=true /d:sonar.cache.path="D:\a\sonarqube_cache"
+          msbuild /t:Rebuild
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
