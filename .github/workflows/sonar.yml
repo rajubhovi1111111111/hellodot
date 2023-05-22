@@ -1,6 +1,6 @@
 # SonarQube configuration for .NET application (built with .NET Framework 4.8)
 
-# Define the workflow
+# Define the workflow 
 on:
   push:
     branches:
