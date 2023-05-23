@@ -20,7 +20,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.0.x' # Replace with your desired .NET version
+          dotnet-version: '3.1.405' # Replace with your desired .NET version
 
       - name: Install dotnet-stylecop
         run: dotnet tool install -g dotnet-stylecop
@@ -31,6 +31,7 @@ jobs:
   sonarqube:
     name: SonarQube Analysis
     runs-on: windows-latest
+    needs: lint
 
     steps:
       - uses: actions/checkout@v2
