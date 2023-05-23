@@ -1,0 +1,47 @@
+# SonarQube configuration for .NET application (built with .NET Framework 4.8) 
+
+# Define the workflow
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sonarqube:
+    name: SonarQube Analysis
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Install Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'  # Adjust the Java version as per your requirements
+
+      - name: Install .NET Core SDK 3.1.405
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Install OpenCover
+        run: dotnet tool install -g opencover
+
+      - name: Build and Generate Code Coverage
+        run: |
+          msbuild /t:Rebuild
+          opencover.console.exe -register:user -target:"path/to/YourProject.Tests.dll" -targetargs:"--no-restore" -output:"coverage.opencover.xml"
+
+      - name: SonarQube Scan
+        run: |
+          dotnet tool install --global dotnet-sonarscanner 
+          dotnet-sonarscanner begin /k:"dotnet1_sim" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cache.enabled=true /d:sonar.cache.path="D:\a\sonarqube_cache"
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
