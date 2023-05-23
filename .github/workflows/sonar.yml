@@ -22,11 +22,11 @@ jobs:
         with:
           dotnet-version: '5.0.x' # Replace with your desired .NET version
 
-      - name: Install dotnet-stylecop
-        run: dotnet tool install -g dotnet-stylecop --version 1.3.2
+      - name: Install dotnet-format
+        run: dotnet tool install -g dotnet-format
 
-      - name: Run linting with dotnet-stylecop
-        run: dotnet stylecop analyze --settings ./stylecop.json
+      - name: Run linting with dotnet-format
+        run: dotnet format --check --verbosity diagnostic
         
   sonarqube:
     name: SonarQube Analysis
