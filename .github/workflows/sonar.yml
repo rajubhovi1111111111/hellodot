@@ -31,7 +31,7 @@ jobs:
   sonarqube:
     name: SonarQube Analysis
     runs-on: windows-latest
-    needs: lint
+ 
 
     steps:
       - uses: actions/checkout@v2
@@ -41,10 +41,7 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.0.2
 
-      - name: Install .NET Core SDK 3.1.405
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.405
+
 
       - name: SonarQube Scan
         run: |
