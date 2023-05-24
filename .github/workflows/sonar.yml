@@ -27,10 +27,6 @@ jobs:
         with:
           java-version: '11'  # Adjust the Java version as per your requirements
 
-      - name: Install .NET Core SDK 3.1.405
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.x
 
       - name: SonarQube Scan
         run: |
